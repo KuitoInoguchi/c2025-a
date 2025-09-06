@@ -14,7 +14,7 @@ bool is_prime(const int n) {
     return false;
 }
 
-bool prove_goldbach() {
+bool test_goldbach() {
     for (int i = 4; i <= 100; i += 2) {
         int index = 0;
         for (int j = primes[index]; index < LEN; j = primes[++index]) {
@@ -30,7 +30,7 @@ bool prove_goldbach() {
 }
 
 int main() {
-    if (prove_goldbach()) {
+    if (test_goldbach()) {
         printf("yes");
     }
     else {
