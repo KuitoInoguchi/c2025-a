@@ -1,68 +1,10 @@
+//
+// Created by upsem on 2025/10/12.
+//
+
+#include "maze.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <conio.h>
-#define HEIGHT 20
-#define WIDTH 20
-
-int game_over = 0;
-char maze[HEIGHT][WIDTH] = {
-    "####################",
-    "#@ #   #     # #  #",
-    "#  # # # ### # # ##",
-    "## # # # # # ###  #",
-    "#  # # # # #   # ##",
-    "# ## # # # #####  #",
-    "#  #   #   #   # ##",
-    "## ####### # # #  #",
-    "#  #     # # # ## #",
-    "# ## ### # # #    #",
-    "#  # #   #   # # ##",
-    "## # # ##### # #  #",
-    "#  # #     # # ## #",
-    "# ## ##### # #  # #",
-    "#    #   # #   ## #",
-    "#### # # # ####  ##",
-    "#  # # # #    #   #",
-    "# ## # # #### ### #",
-    "#  #   #            ",
-    "####################",
-};
-int player_x = 1;
-int player_y = 1;
-int temp_x;
-int temp_y;
-const int exit_x = 18;
-const int exit_y = 19;
-enum directions {up, down, left, right};
-
-void game();
-void move_player();
-void print_maze();
-int get_direction();
-void change_coordinate(enum directions dir);
-int not_wall(enum directions dir);
-void check_over();
-void change_maze();
-void save_previous_player_position();
-
-int main() {
-    game();
-    return 0;
-}
-
-void game() {
-    while (!game_over) {
-        system("cls");
-        print_maze();
-        move_player();
-        check_over();
-    }
-    system("cls");
-    print_maze();
-    printf("Game over!\n");
-    system("pause");
-}
-
 void move_player() {
     int dir = get_direction();
     if (not_wall(dir)) {

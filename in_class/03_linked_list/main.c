@@ -11,14 +11,16 @@ typedef struct Node{
 
 Node* node(int data);
 Node* ptr_to_end(Node* h);
-// Node* find_node(Node* h, int data);
 int find(Node* h, int data);
+Node* move_player(Node* h, int steps);
+int find_next(Node* h, int data);
 void add_in_front(Node** h, Node* p);
-void insert(Node** h, int data, Node* p);
 void append(Node** h, Node* p);
-void de_node(Node* p);
+void free_list(Node* h);
 void print_list(const Node* h);
+void reverse(Node** h);
 void test1();
+void test2();
 
 int main() {
     test1();
@@ -40,17 +42,6 @@ Node* ptr_to_end(Node* h) {
     return current;
 }
 
-// Node* find_node(Node* h, int data) {
-//     Node* current = h;
-//     while (current != NULL) {
-//         if (data == current->data) {
-//             break;
-//         }
-//         current = current->next;
-//     }
-//     return current;
-// }
-
 int find(Node* h, int data) {
     Node* current = h;
     int index = 0;
@@ -67,23 +58,46 @@ int find(Node* h, int data) {
     return index;
 }
 
+Node* move_player(Node* h, int steps) {
+    Node* target = h;
+    for (int i = 0; i < steps; i++) {
+        target = target->next;
+    }
+    return target;
+}
+
+int find_next(Node* h, int data) {
+    static Node* starting_pos = NULL;
+    if (starting_pos == NULL) {
+        starting_pos = h;
+    }
+
+    int abs_index = 0;
+    Node* temp = h;
+    while (temp != starting_pos) {
+        temp = temp->next;
+        abs_index++;
+    }
+
+    Node* current = starting_pos;
+    while (current != NULL) {
+        if (current->data == data) {
+            break;
+        }
+        abs_index++;
+        current = current->next;
+    }
+    if (current == NULL) {
+        return -1;
+    }
+
+    starting_pos = current->next;
+    return abs_index;
+}
+
 void add_in_front(Node** h, Node* p) {
     p->next = *h;
     *h = p;
-}
-
-void insert(Node** h, const int data, Node* p) {
-    // Node* target = find_node(*h, data);
-    Node* current = *h;
-    const int index = find(*h, data);
-    if (index == -1) {
-        printf("FAILED!\n");
-        return;
-    }
-    for (int i = 0; i < index; ++i) {
-        current = current->next;
-    }
-    add_in_front(&current, p);
 }
 
 void append(Node** h, Node* p) {
@@ -91,8 +105,14 @@ void append(Node** h, Node* p) {
     last->next = p;
 }
 
-void de_node(Node* p) {
-    free(p);
+void free_list(Node* h) {
+    Node* current = h;
+    Node* next = NULL;
+    while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next;
+    }
 }
 
 void print_list(const Node* h) {
@@ -104,17 +124,29 @@ void print_list(const Node* h) {
     printf("\n");
 }
 
+void reverse(Node** h) {
+    Node* first = NULL;
+    Node* second = *h;
+    first = second;
+    second = second->next;
+    first->next = NULL;
+    do {
+        Node* temp = first;
+        first = second;
+        second = second->next;
+        first->next = temp;
+    } while (second != NULL);
+    *h = first;
+}
+
 void test1() {
     Node* h0 = NULL;
 
     Node* p1 = node(1);
-    // h0 = p1;
     add_in_front(&h0, p1);
     print_list(h0);
 
     Node* p2 = node(2);
-    // p2->next = h0;
-    // h0 = p2;
     add_in_front(&h0, p2);
     print_list(h0);
 
@@ -130,13 +162,24 @@ void test1() {
     append(&h0, p5);
     print_list(h0);
 
-    // int index = find(h0, 2);
-    // printf("%d\n", index);
-    //
-    // int index2 = find(h0, 3);
-    // printf("%d\n", index2);
-
     Node* p6 = node(344);
-    insert(&h0, 114514, p6);
+    append(&h0, p6);
     print_list(h0);
+
+    printf("%d\n", find(h0, 344));
+    reverse(&h0);
+    print_list(h0);
+
+    Node* p7 = node(5);
+    Node* p8 = node(5);
+    Node* p9 = node(5);
+    append(&h0, p7);
+    append(&h0, p8);
+    append(&h0, p9);
+    print_list(h0);
+
+    printf("%d\n", find_next(h0, 5));
+    printf("%d\n", find_next(h0, 5));
+    printf("%d\n", find_next(h0, 5));
+    free_list(h0);
 }

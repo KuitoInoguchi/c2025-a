@@ -20,12 +20,12 @@ add_executable(p06_hanoi  level1/p06_hanoi/main.c
         level1/p06_hanoi/hanoi.h
 )
 
-add_executable(p07_maze  level1/p07_maze/main.c
-        level1/p07_maze/stack.h
-        level1/p07_maze/stack.c
-)
+add_executable(p07_maze  level1/p07_maze/main.c)
 
-add_executable(p08_push_boxes  level1/p08_push_boxes/main.c)
+add_executable(p08_push_boxes  level1/p08_push_boxes/main.c
+        level1/p08_push_boxes/maze.c
+        level1/p08_push_boxes/maze.h
+)
 
 add_executable(p09_linked_list  level1/p09_linked_list/main.c)
 
