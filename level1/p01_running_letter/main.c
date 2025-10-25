@@ -21,7 +21,7 @@ void move_backwards(const int ScreenWidth) {
     }
 }
 
-int main() {
+int main0() {
     const int SCREEN_WIDTH = 50;
     for (;;) {
         move_forwards(SCREEN_WIDTH);

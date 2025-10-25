@@ -22,10 +22,11 @@ add_executable(p06_hanoi  level1/p06_hanoi/main.c
 
 add_executable(p07_maze  level1/p07_maze/main.c)
 
-add_executable(p08_push_boxes  level1/p08_push_boxes/main.c
-        level1/p08_push_boxes/maze.c
-        level1/p08_push_boxes/maze.h
-)
+add_executable(p08_push_boxes level1/p08_push_boxes/main.c)
+
+file(COPY "level1/p08_push_boxes/maze_1.txt" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "level1/p08_push_boxes/maze_2.txt" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "level1/p08_push_boxes/maze_3.txt" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(p09_linked_list  level1/p09_linked_list/main.c)
 

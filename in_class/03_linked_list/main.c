@@ -22,7 +22,7 @@ void reverse(Node** h);
 void test1();
 void test2();
 
-int main() {
+int main0() {
     test1();
     return 0;
 }

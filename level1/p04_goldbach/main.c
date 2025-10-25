@@ -29,7 +29,7 @@ bool test_goldbach() {
     return true;
 }
 
-int main() {
+int main0() {
     if (test_goldbach()) {
         printf("yes");
     }

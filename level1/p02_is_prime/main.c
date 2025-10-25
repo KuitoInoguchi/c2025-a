@@ -15,7 +15,7 @@ bool is_prime(const int n) {
     return true;
 }
 
-int main() {
+int main0() {
     int n = 0;
     scanf("%d", &n);
     if (is_prime(n)) {

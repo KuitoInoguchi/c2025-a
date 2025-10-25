@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
+
+#include
+#include
+#include
+#include
 #define HEIGHT 20
 #define WIDTH 20
 
@@ -39,13 +44,13 @@ void game();
 void move_player();
 void print_maze();
 int get_direction();
-void change_coordinate(enum directions dir);
+void change_coordinate_of_the_thing(enum directions dir, enum things thing);
 int not_wall(enum directions dir);
-void check_over();
+void check_game_over();
 void change_maze();
-void save_previous_player_position();
+void save_previous_position(enum things thing);
 
-int main() {
+int main0() {
     game();
     return 0;
 }
@@ -55,7 +60,7 @@ void game() {
         system("cls");
         print_maze();
         move_player();
-        check_over();
+        check_game_over();
     }
     system("cls");
     print_maze();
@@ -66,7 +71,7 @@ void game() {
 void move_player() {
     int dir = get_direction();
     if (not_wall(dir)) {
-        change_coordinate(dir);
+        change_coordinate_of_the_thing(dir, TODO);
     }
     change_maze();
 }
@@ -99,8 +104,8 @@ int get_direction() {
     }
 }
 
-void change_coordinate(enum directions dir) {
-    save_previous_player_position();
+void change_coordinate_of_the_thing(enum directions dir, enum things thing) {
+    save_previous_position(TODO);
     switch (dir) {
         case up:
             player_x--;
@@ -147,7 +152,7 @@ int not_wall(enum directions dir) {
     return -1;
 }
 
-void check_over() {
+void check_game_over() {
     if (player_x == exit_x && player_y == exit_y) {
         game_over = 1;
     }
@@ -161,7 +166,7 @@ void change_maze() {
     maze[player_x][player_y] = '@';
 }
 
-void save_previous_player_position() {
+void save_previous_position(enum things thing) {
     temp_x = player_x;
     temp_y = player_y;
 }

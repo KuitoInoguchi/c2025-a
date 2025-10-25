@@ -45,7 +45,7 @@ bool full(Queue* q) {
     return q -> count == q -> capacity;
 }
 
-int main() {
+int main0() {
     Queue* q1 = create_queue(2);
     Queue* q2 = create_queue(2);
 

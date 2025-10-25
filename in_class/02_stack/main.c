@@ -91,7 +91,7 @@ void test_case1(void) {
 
 int rev_pol(char op);
 
-int main() {
+int main0() {
     // test_case1();
 
     return 0;

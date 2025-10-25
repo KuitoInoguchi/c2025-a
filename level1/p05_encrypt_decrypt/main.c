@@ -15,7 +15,7 @@ void decrypt(const char* enc_str, const size_t len, char* dec) {
     dec[len] = '\0';
 }
 
-int main() {
+int main0() {
     const int SIZE = 1000;
     char str[SIZE];
     char enc_str[SIZE];

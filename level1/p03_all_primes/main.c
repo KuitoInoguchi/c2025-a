@@ -22,7 +22,7 @@ bool is_prime(const int n) {
     return true;
 }
 
-int main() {
+int main0() {
     time_t start_time = clock();
     for (int i = 2; i <= 1000; i++) {
         if (is_prime(i)) {
