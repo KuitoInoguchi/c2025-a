@@ -1,0 +1,2 @@
+thingA,0
+thingB,255

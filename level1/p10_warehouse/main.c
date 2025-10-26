@@ -1,6 +1,11 @@
-#include <printf.h>
+#include "warehouse.h"
 
-int main0() {
-    printf("hello world!\n");
+int main() {
+    warehouse();
     return 0;
+}
+
+void warehouse() {
+    load_inventory_from_file();
+    while (!menu());
 }

@@ -32,7 +32,11 @@ file(COPY "level1/p08_push_boxes/maze_3.txt" DESTINATION ${CMAKE_CURRENT_BINARY_
 
 add_executable(p09_linked_list  level1/p09_linked_list/main.c)
 
-add_executable(p10_warehouse  level1/p10_warehouse/main.c)
+add_executable(p10_warehouse  level1/p10_warehouse/main.c
+        level1/p10_warehouse/warehouse.h
+        level1/p10_warehouse/warehouse.c)
+
+file(COPY "level1/p10_warehouse/inventory.txt" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(01_queue in_class/01_queue/main.c)
 
