@@ -43,3 +43,9 @@ add_executable(01_queue in_class/01_queue/main.c)
 add_executable(03_linked_list in_class/03_linked_list/main.c)
 
 add_executable(02_stack in_class/02_stack/main.c)
+
+add_executable(A0_minimax project/pruned_minimax.c
+        project/general_header.h
+        project/main.c
+        project/evaluate.h
+        project/evaluate.c)

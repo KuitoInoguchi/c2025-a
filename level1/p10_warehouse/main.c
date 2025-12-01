@@ -1,6 +1,6 @@
 #include "warehouse.h"
 
-int main() {
+int test() {
     warehouse();
     return 0;
 }
