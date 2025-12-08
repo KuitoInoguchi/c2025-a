@@ -3,7 +3,6 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "general_header.h"
 #include "evaluate.h"
 
