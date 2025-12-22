@@ -4,10 +4,14 @@
 
 #include "raylib.h"
 #include <math.h>
+#include "general_header.h"
+#include "evaluate.h"
 #define BOARD_SIZE_WITH_SPACE 230
 #define BOARD_SIZE 15
+#define MAX_PIECE_COUNT 255
 
 typedef enum {PIECE_BLACK, PIECE_WHITE, PIECE_EMPTY = -1} PieceColor;
+typedef enum {STATE_PLAYER_TURN, STATE_AI_TURN, STATE_GAME_OVER} GameState;
 const int screenWidth = 1480;
 const int screenHeight = 1480;
 const int pieceSize = 80;
@@ -26,17 +30,7 @@ int main() {
         }
     }
     int pieceCount = 0;
-
-    int piecesInPlace[BOARD_SIZE_WITH_SPACE];
-    for (int i = 0; i < BOARD_SIZE_WITH_SPACE; i++) {
-        piecesInPlace[i] = PIECE_EMPTY;
-    }
-    Vector2 coordinatesInPlace[BOARD_SIZE_WITH_SPACE] = {};
-    for (int i = 0; i < BOARD_SIZE_WITH_SPACE; i++) {
-        Vector2 initializer = {0, 0};
-        coordinatesInPlace[i] = initializer;
-    }
-
+    GameState currentState = STATE_PLAYER_TURN;
 
     InitWindow(screenWidth, screenHeight, "test1");
 
@@ -66,10 +60,14 @@ int main() {
     Texture2D highlightTexture = LoadTextureFromImage(highlight);
     UnloadImage(highlight);
 
-    Vector2 piecePosition = {0, 0};
-    Vector2 pieceCoordinate = {0, 0};
+    // load font
+    Font notoSerifSC = LoadFont("assets/NotoSerifSC-Bold.ttf");
+    Font quickSand = LoadFont("assets/Quicksand-Bold.ttf");
 
-    int pieceToDraw = PIECE_BLACK;
+    Vector2 piecePosition = {0, 0};
+    Vector2 ghostPieceCoordinate = {0, 0};
+
+    int pieceToDrawColor = PIECE_BLACK;
     Vector2 lastPieceCoordinates = {-2, -2};
     char* superpositionWarning = "";
 
@@ -82,13 +80,12 @@ int main() {
         };
 
         piecePosition = GetMousePosition();
-        PositionToCoordinate(piecePosition, &pieceCoordinate);
-        CoordinateToStandardPosition(pieceCoordinate, &drawPos, blackPieceTexture);
+        PositionToCoordinate(piecePosition, &ghostPieceCoordinate);
+        CoordinateToStandardPosition(ghostPieceCoordinate, &drawPos, blackPieceTexture);
 
-        bool isMouseClicked = false;
 
         const char* coordinateIndicator = TextFormat("(%d, %d)",
-            (int)pieceCoordinate.x, (int)pieceCoordinate.y);
+            (int)ghostPieceCoordinate.x, (int)ghostPieceCoordinate.y);
 
 
         BeginDrawing();
@@ -98,77 +95,96 @@ int main() {
 
             // the ghost piece
             Color COVER = Fade(WHITE, 0.6f);
-            if (pieceToDraw == PIECE_BLACK) {
+            if (pieceToDrawColor == PIECE_BLACK) {
                 DrawTextureV(blackPieceTexture, drawPos, COVER);
             }
             else {
                 DrawTextureV(whitePieceTexture, drawPos, COVER);
             }
 
-            // for (int i = 0; i < BOARD_SIZE_WITH_SPACE; i++) {
-            //     if (piecesInPlace[i] == PIECE_EMPTY) break;
-            //     DrawTextureV(piecesInPlace[i] ? whitePieceTexture : blackPieceTexture,
-            //         coordinatesInPlace[i], WHITE);
-            // } // draw pieces on board
-
-            // new drawing pieces
-            for (int i = 0; i < BOARD_SIZE; i++) {
-                for (int j = 0; j < BOARD_SIZE; j++) {
-                    if (logicBoard[i][j] != PIECE_EMPTY) {
-                        Vector2 tempCoordinate = {i, j};
+            // drawing pieces on board
+            for (int row = 0; row < BOARD_SIZE; row++) {
+                for (int col = 0; col < BOARD_SIZE; col++) {
+                    if (logicBoard[row][col] != PIECE_EMPTY) {
+                        Vector2 tempCoordinate = {col, row};
                         Vector2 drawPosition = {0.0f, 0.0f};
                         CoordinateToStandardPosition(tempCoordinate, &drawPosition, blackPieceTexture);
-                        DrawTextureV(logicBoard[i][j] ? whitePieceTexture : blackPieceTexture,
+                        DrawTextureV(logicBoard[row][col] ? whitePieceTexture : blackPieceTexture,
                             drawPosition, WHITE);
                     }
                 }
             }
 
 
-            // if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            //     if (drawPos.x == coordinatesInPlace[pieceCount - 1].x ||
-            //         drawPos.y == coordinatesInPlace[pieceCount - 1].y ) {
-            //         superpositionWarning = "You can't place a piece here!";
-            //     }
-            //     else {
-            //         superpositionWarning = "";
-            //         piecesInPlace[pieceCount] = pieceToDraw;
-            //         coordinatesInPlace[pieceCount++] = drawPos;
-            //         isMouseClicked = true;
-            //     }
-            // }
-
-            // new ver to place and store pieces
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                if (IsIntersectionEmpty(logicBoard, pieceCoordinate.x, pieceCoordinate.y) &&
-                    isPieceWithinBoundary((int)pieceCoordinate.x, (int)pieceCoordinate.y)) {
-                    logicBoard[(int)pieceCoordinate.x][(int)pieceCoordinate.y] = pieceToDraw;
+            // place and store pieces
+            if (!is_game_over(logicBoard)) {
+                if (currentState == STATE_PLAYER_TURN) {
+                    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                        if (IsIntersectionEmpty(logicBoard, ghostPieceCoordinate.x, ghostPieceCoordinate.y) &&
+                            isPieceWithinBoundary((int)ghostPieceCoordinate.x, (int)ghostPieceCoordinate.y)) {
+                            logicBoard[(int)ghostPieceCoordinate.y][(int)ghostPieceCoordinate.x] = pieceToDrawColor;
+                            pieceCount++;
+                            superpositionWarning = "";
+                            lastPieceCoordinates.x = (int)ghostPieceCoordinate.x;
+                            lastPieceCoordinates.y = (int)ghostPieceCoordinate.y;
+                            Vector2 tempV = lastPieceCoordinates;
+                            CoordinateToStandardPosition(tempV, &lastPieceCoordinates, blackPieceTexture);
+                            currentState = STATE_AI_TURN;
+                            pieceToDrawColor = !pieceToDrawColor;
+                            }
+                        else {
+                            superpositionWarning = "You can't place a piece here!";
+                        }
+                    }
+                }
+                else if (currentState == STATE_AI_TURN){ // AI's turn
+                    BeginDrawing();
+                    Vector2 supWarCoo = {442, 30};
+                    DrawTextEx(quickSand, "Thinking...", supWarCoo, 60, 0, WHITE);
+                    EndDrawing();
+                    Move bestMove = get_best_move(logicBoard);
+                    logicBoard[bestMove.x][bestMove.y] = pieceToDrawColor;
                     pieceCount++;
-                    isMouseClicked = true;
                     superpositionWarning = "";
-                    lastPieceCoordinates.x = (int)pieceCoordinate.x;
-                    lastPieceCoordinates.y = (int)pieceCoordinate.y;
+                    lastPieceCoordinates.x = bestMove.y;
+                    lastPieceCoordinates.y = bestMove.x;
                     Vector2 tempV = lastPieceCoordinates;
                     CoordinateToStandardPosition(tempV, &lastPieceCoordinates, blackPieceTexture);
+                    currentState = STATE_PLAYER_TURN;
+                    pieceToDrawColor = !pieceToDrawColor;
+                }
+            }
+            else {
+                Vector2 supWarCoo = {screenWidth / 2.0f, screenHeight / 2.0f};
+                if (pieceCount != MAX_PIECE_COUNT) {
+                    if (currentState == STATE_AI_TURN) {
+                        DrawTextEx(quickSand, "Player Wins!", supWarCoo, 150, 0, WHITE);
+                    }
+                    if (currentState == STATE_PLAYER_TURN) {
+                        DrawTextEx(quickSand, "AI wins!", supWarCoo, 150, 0, WHITE);
+                    }
                 }
                 else {
-                    superpositionWarning = "You can't place a piece here!";
+                    Vector2 supWarCoo = {442, 30};
+                    DrawTextEx(quickSand, "Draw!", supWarCoo, 60, 0, WHITE);
                 }
             }
 
-            // lastPieceCoordinates = coordinatesInPlace[pieceCount - 1];
-            // lastPieceCoordinates.x -= highlightTexture.height / 2.0f;
-            // lastPieceCoordinates.y -= highlightTexture.width / 2.0f;
             if (lastPieceCoordinates.x > 0) {
                 DrawTextureV(highlightTexture, lastPieceCoordinates, WHITE); // highlighting
             }
-            if (isMouseClicked) {
-                pieceToDraw = !pieceToDraw; // switch piece color
-                isMouseClicked = false;
-            }
 
-            DrawText(coordinateIndicator, 60, 30, 40, WHITE);
-            DrawText(superpositionWarning, 250, 30, 40, WHITE);
+            // if (isMouseClicked) {
+            //     pieceToDraw = !pieceToDraw; // switch piece color
+            //     isMouseClicked = false;
+            // }
+
+            // DrawText(coordinateIndicator, 60, 30, 40, WHITE);
+            Vector2 cooIndCoo = {60, 30};
+            DrawTextEx(quickSand, coordinateIndicator, cooIndCoo, 60, 0, WHITE);
+            // DrawText(superpositionWarning, 442, 30, 40, WHITE);
+            Vector2 supWarCoo = {442, 30};
+            DrawTextEx(quickSand, superpositionWarning, supWarCoo, 60, 0, WHITE);
         }
         EndDrawing();
     }
@@ -177,6 +193,9 @@ int main() {
     UnloadTexture(whitePieceTexture);
     UnloadTexture(boardTexture);
     UnloadTexture(highlightTexture);
+    UnloadFont(notoSerifSC);
+    UnloadFont(quickSand);
+
     CloseWindow();
 
     return 0;
@@ -199,7 +218,7 @@ void CoordinateToStandardPosition(Vector2 Coordinate, Vector2* Position, Texture
 }
 
 bool IsIntersectionEmpty(int board[][BOARD_SIZE], int x, int y) {
-    if (board[x][y] == PIECE_EMPTY) return true;
+    if (board[y][x] == PIECE_EMPTY) return true;
     return false;
 }
 

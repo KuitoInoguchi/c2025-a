@@ -8,7 +8,7 @@
 #include <stdbool.h>
 #include "general_header.h"
 
-#define SCORE_FIVE          10000000 // 连五（胜利）
+#define SCORE_FIVE          100000000 // 连五（胜利）
 #define SCORE_LIVE_FOUR     1000000  // 活四
 #define SCORE_BLOCKED_FOUR  100000   // 冲四 / 堵四
 #define SCORE_LIVE_THREE    10000    // 活三

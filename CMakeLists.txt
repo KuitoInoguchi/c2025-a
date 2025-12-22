@@ -66,5 +66,10 @@ add_executable(GomokuAI_Console project/pruned_minimax.c
         project/evaluate.c
 )
 
-add_executable(GUI_test project/main_GUI.c)
+add_executable(GUI_test project/main_GUI.c
+        project/pruned_minimax.c
+        project/general_header.h
+        project/evaluate.h
+        project/evaluate.c
+)
 target_link_libraries(GUI_test PRIVATE raylib)

@@ -8,9 +8,12 @@
 
 // #define MAX_CHILDREN 100
 #define SIZE 15
-#define EMPTY 0
+// #define EMPTY 0
+// #define AI 1
+// #define PLAYER 2
+#define PLAYER 0
 #define AI 1
-#define PLAYER 2
+#define EMPTY (-1)
 #define SEARCH_DEPTH 3
 typedef struct {
     int score;
