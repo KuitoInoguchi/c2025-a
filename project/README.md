@@ -1,3 +1,4 @@
+*完整版本见同目录下“实验报告.pdf”*
 # 一、实验目的
 1. 通过五子棋AI开发，深入理解Minimax算法与Alpha-Beta剪枝技术在零和博弈场景中的应用逻辑与优化价值。
 2. 深化对C语言二维数组、结构体、枚举类型及递归函数的理解与实践，提升复杂状态空间的建模与处理能力。
@@ -91,7 +92,7 @@ typedef struct {
 *各个函数各自的实现逻辑流程图位于附录。*
 
 **各个模块之间的交互如以下流程图所示：**  
-![main函数逻辑](project/report/main函数逻辑.drawio.png)
+![main函数逻辑](./report/main函数逻辑.drawio.png)
 
 ### 步骤4：实验测试
 
@@ -133,34 +134,34 @@ typedef struct {
 ### 1.2 程序运行截图
 *注：下列所有截图中，玩家执黑棋，AI执白棋。*
 
-![图片1](project/report/图片1.png)
+![图片1](./report/图片1.png)
 
 【图片1】*玩家（黑棋）尝试在棋盘外（-1，1）处落子，被程序阻止。玩家在（0，0）处落子后，程序仍然正常运行。*  
 *AI（白棋）最近一次落子位于（1，1）处，高光提示正常显示。测试结果符合预期。*
 
-![图片2](project/report/图片2.png)
+![图片2](./report/图片2.png)
 
 【图片2】*玩家尝试在（1，1）处落子，但此处已有白棋，因此被程序阻止。测试结果符合预期。*  
-![图片3](project/report/图片3.png)
+![图片3](./report/图片3.png)
 
 【图片3】*玩家连成五子并获胜，界面显示"Player Wins!"字样，且无法继续落子。测试结果符合预期。*  
-![图片4](project/report/图片4.png)
+![图片4](./report/图片4.png)
 
 【图片4】*AI连成五子并获胜，界面显示"AI Wins!"字样，且无法继续落子。测试结果符合预期。*  
-![图片5](project/report/图片5.png)
+![图片5](./report/图片5.png)
 
 【图片5】*AI在左上角连成四子后，直接落子于（0，0）处并取胜。测试结果符合预期。*  
-![图片6](project/report/图片6.png)
+![图片6](./report/图片6.png)
 
 【图片6】*AI成功识别并拦截玩家的“堵四”。测试结果符合预期。*  
-![图片7](project/report/图片7.png)
+![图片7](./report/图片7.png)
 
 【图片7】*AI成功识别并拦截玩家的“活三”。测试结果符合预期。*  
-![图片8](project/report/图片8.png)
+![图片8](./report/图片8.png)
 
 【图片8】*AI落子于（6，6）处（即高光提示处），企图在下一轮着子时与左上角的棋子连成“活四”并取胜。对于初等水平的对弈者而言，这一策略不容易被观察到。*  
-![图片9](project/report/图片9.png)  
-![图片10](project/report/图片10.png)  
+![图片9](./report/图片9.png)  
+![图片10](./report/图片10.png)  
 【图片9】与【图片10】*在这两张图片中，玩家采用了相同的策略取胜，AI两次以相同的方式失败，这说明AI无法灵活调整策略。测试结果不符合预期。*
 
 ## 2. 结果分析
@@ -226,41 +227,41 @@ typedef struct {
 
 ### 评分映射函数`get_pattern_score()`
 
-![](project/report/UntitledDiagram.drawio.png)
+![](./report/UntitledDiagram.drawio.png)
 
 ### 连子计数函数`evaluate_direction()`
 
-![](project/report/evaluate_direction().drawio.png)
+![](./report/evaluate_direction().drawio.png)
 
 ### 局势评分函数`evaluate_board()`
 
-![](project/report/evaluate_board().drawio.png)
+![](./report/evaluate_board().drawio.png)
 
 
 ## 2. 搜索模块函数逻辑
 
 ### 核心搜索算法`minimax_alpha_beta()`
 
-![](project/report/minimax_alpha_beta().drawio.png)
+![](./report/minimax_alpha_beta().drawio.png)
 
 ### 最优落子求解`get_best_move()`
 
-![](project/report/get_best_move().drawio.png)
+![](./report/get_best_move().drawio.png)
 
 ## 3. 交互模块逻辑
 
 ### 像素坐标→网格坐标`PositionToCoordinate()`
 
-![](project/report/PositionToCoordinate().drawio.png)
+![](./report/PositionToCoordinate().drawio.png)
 
 ### 网格坐标→像素坐标`CoordinateToPosition()`
 
-![](project/report/CoordinateToPosition().drawio.png)
+![](./report/CoordinateToPosition().drawio.png)
 
 ### 游戏结束判定函数`is_game_over()`
 
-![](project/report/is_game_over.drawio.png)
+![](./report/is_game_over.drawio.png)
 
 ### GUI层游戏结束判定逻辑
 
-![](project/report/GUI层游戏结束判定.drawio.png)
+![](./report/GUI层游戏结束判定.drawio.png)
