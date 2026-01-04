@@ -51,25 +51,25 @@ add_executable(03_linked_list in_class/03_linked_list/main.c)
 
 add_executable(02_stack in_class/02_stack/main.c)
 
-add_executable(GomokuAI_GUI project/pruned_minimax.c
-        project/general_header.h
+add_executable(GomokuAI_GUI project/search.c
+        project/search.h
         project/evaluate.h
         project/evaluate.c
-        "project/main_GUI(ai_generated).c")
+)
 file (COPY "project/assets" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(GomokuAI_GUI PRIVATE raylib)
 
-add_executable(GomokuAI_Console project/pruned_minimax.c
-        project/general_header.h
-        "project/main_console(ai_generated).c"
+add_executable(GomokuAI_Console project/search.c
+        project/search.h
         project/evaluate.h
         project/evaluate.c
 )
 
 add_executable(GUI_test project/main_GUI.c
-        project/pruned_minimax.c
-        project/general_header.h
+        project/search.c
+        project/search.h
         project/evaluate.h
         project/evaluate.c
+        project/GUI.h
 )
 target_link_libraries(GUI_test PRIVATE raylib)

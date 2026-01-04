@@ -3,10 +3,6 @@
 //
 
 #include "evaluate.h"
-#include <stdbool.h>
-#include "general_header.h"
-
-// extern int board[SIZE][SIZE];
 
 // is a coordinate in the board (valid)?
 int is_valid(int r, int c) {
@@ -33,7 +29,7 @@ int get_pattern_score(int count, int open_ends) {
 
     return 0;
 }
-// color: same player
+// color: which color to count
 // dr = 0, dc = 1: vertically count
 // dr = 1, dc = 0: horizontally count
 // dr = 1; dc = 1: top left to bottom right

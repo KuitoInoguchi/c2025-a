@@ -5,8 +5,7 @@
 #ifndef C2025_CHALLENGE_EVALUATE_H
 #define C2025_CHALLENGE_EVALUATE_H
 
-#include <stdbool.h>
-#include "general_header.h"
+#include "search.h"
 
 #define SCORE_FIVE          100000000 // 连五（胜利）
 #define SCORE_LIVE_FOUR     1000000  // 活四

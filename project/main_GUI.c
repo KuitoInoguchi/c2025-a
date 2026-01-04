@@ -1,26 +1,11 @@
 //
 // Created by upsem on 2025/12/8.
 //
-
-#include "raylib.h"
 #include <math.h>
-#include "general_header.h"
+#include "search.h"
 #include "evaluate.h"
-#define BOARD_SIZE_WITH_SPACE 230
-#define BOARD_SIZE 15
-#define MAX_PIECE_COUNT 255
+#include "GUI.h"
 
-typedef enum {PIECE_BLACK, PIECE_WHITE, PIECE_EMPTY = -1} PieceColor;
-typedef enum {STATE_PLAYER_TURN, STATE_AI_TURN, STATE_GAME_OVER} GameState;
-const int screenWidth = 1480;
-const int screenHeight = 1480;
-const int pieceSize = 80;
-const double marginWidth = 94.0;
-const double cellSideLength = 92.5;
-void PositionToCoordinate(Vector2 Position, Vector2 *Coordinate);
-void CoordinateToStandardPosition(Vector2 Coordinate, Vector2* Position, Texture2D pieceTexture);
-bool IsIntersectionEmpty(int board[][BOARD_SIZE], int x, int y);
-bool isPieceWithinBoundary(int x, int y);
 
 int main() {
     int logicBoard[BOARD_SIZE][BOARD_SIZE];
@@ -81,7 +66,7 @@ int main() {
 
         piecePosition = GetMousePosition();
         PositionToCoordinate(piecePosition, &ghostPieceCoordinate);
-        CoordinateToStandardPosition(ghostPieceCoordinate, &drawPos, blackPieceTexture);
+        CoordinateToPosition(ghostPieceCoordinate, &drawPos, blackPieceTexture);
 
 
         const char* coordinateIndicator = TextFormat("(%d, %d)",
@@ -108,7 +93,7 @@ int main() {
                     if (logicBoard[row][col] != PIECE_EMPTY) {
                         Vector2 tempCoordinate = {col, row};
                         Vector2 drawPosition = {0.0f, 0.0f};
-                        CoordinateToStandardPosition(tempCoordinate, &drawPosition, blackPieceTexture);
+                        CoordinateToPosition(tempCoordinate, &drawPosition, blackPieceTexture);
                         DrawTextureV(logicBoard[row][col] ? whitePieceTexture : blackPieceTexture,
                             drawPosition, WHITE);
                     }
@@ -128,7 +113,7 @@ int main() {
                             lastPieceCoordinates.x = (int)ghostPieceCoordinate.x;
                             lastPieceCoordinates.y = (int)ghostPieceCoordinate.y;
                             Vector2 tempV = lastPieceCoordinates;
-                            CoordinateToStandardPosition(tempV, &lastPieceCoordinates, blackPieceTexture);
+                            CoordinateToPosition(tempV, &lastPieceCoordinates, blackPieceTexture);
                             currentState = STATE_AI_TURN;
                             pieceToDrawColor = !pieceToDrawColor;
                             }
@@ -149,7 +134,7 @@ int main() {
                     lastPieceCoordinates.x = bestMove.y;
                     lastPieceCoordinates.y = bestMove.x;
                     Vector2 tempV = lastPieceCoordinates;
-                    CoordinateToStandardPosition(tempV, &lastPieceCoordinates, blackPieceTexture);
+                    CoordinateToPosition(tempV, &lastPieceCoordinates, blackPieceTexture);
                     currentState = STATE_PLAYER_TURN;
                     pieceToDrawColor = !pieceToDrawColor;
                 }
@@ -174,10 +159,6 @@ int main() {
                 DrawTextureV(highlightTexture, lastPieceCoordinates, WHITE); // highlighting
             }
 
-            // if (isMouseClicked) {
-            //     pieceToDraw = !pieceToDraw; // switch piece color
-            //     isMouseClicked = false;
-            // }
 
             // DrawText(coordinateIndicator, 60, 30, 40, WHITE);
             Vector2 cooIndCoo = {60, 30};
@@ -210,7 +191,7 @@ void PositionToCoordinate(Vector2 Position, Vector2 *Coordinate) {
     Coordinate->y = row;
 }
 
-void CoordinateToStandardPosition(Vector2 Coordinate, Vector2* Position, Texture2D pieceTexture) {
+void CoordinateToPosition(Vector2 Coordinate, Vector2* Position, Texture2D pieceTexture) {
     float toPrintX = marginWidth + Coordinate.x * cellSideLength - pieceTexture.width / 2.0f;
     float toPrintY = marginWidth + Coordinate.y * cellSideLength - pieceTexture.width / 2.0f;
     Position->x = toPrintX;
