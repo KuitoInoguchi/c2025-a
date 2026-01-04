@@ -72,7 +72,7 @@ typedef struct {
 
 - 核心搜索算法`minimax_alpha_beta()`：设定搜索深度为3，以当前棋盘为起点，遍历后续`SEARCH_DEPTH`回合内所有可能落子，形成博弈树。通过递归遍历至叶节点，调用`evaluate_board()`获取局势评分，按Minimax规则（Maximizer/Minimizer交替）将评分反向传递至根节点。采用"模拟落子-评分计算-取消落子"的回溯逻辑实现棋局预测，通过Alpha-Beta剪枝优化搜索效率。当搜索深度为0或游戏结束时，直接返回局势评分。
 - 最优落子求解`get_best_move()`：作为AI与对弈逻辑的交互接口，遍历棋盘所有空位，通过"模拟落子-调用`minimax_alpha_beta()`评分-取消落子"的流程，筛选出评分最大的落子点（AI为Maximizer），封装为Move结构体返回，其坐标用于GUI模块的AI落子绘制。
-#### 3.3 交互模块核心逻辑（GUI.h/GUI.c、evaluate.h）
+#### 3.3 交互模块核心逻辑（GUI.h/main_GUI.c、evaluate.h）
 - 基础架构：引入Raylib图形库构建交互框架。
 - 像素坐标→网格坐标：`PositionToCoordinate()`。由于棋盘数组仅支持网格坐标存储，而Raylib获取的鼠标位置为屏幕像素坐标，需通过以下逻辑转换：先通过棋盘素材确定边界像素宽度`marginWidth`与格子像素宽度`cellSideLength`，将鼠标像素坐标减去`marginWidth`后除以`cellSideLength`，得到的浮点数经四舍五入转换为整数，即为对应的棋盘网格行列坐标。
 
